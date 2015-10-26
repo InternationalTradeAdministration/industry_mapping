@@ -1,20 +1,20 @@
-ActiveAdmin.register Topic, as: 'FailedLookup' do
-  menu label: proc { "Failed Lookups [#{ Topic.includes(:sectors, :industries).where('sectors.id' => nil, 'industries.id' => nil).count }]" }, priority: 1337
+ActiveAdmin.register MappedTerm, as: 'FailedLookup' do
+  menu label: proc { "Failed Lookups [#{ MappedTerm.includes(:terms).where('terms.id' => nil).count }]" }, priority: 1337
 
   actions :index
-  remove_filter :industry_sector_topics
 
   index do
     column :name
+    column :source
     column :updated_at
-    actions defaults: false do |topic|
-      link_to 'Fix', edit_admin_topic_path(topic)
+    actions defaults: false do |mapped_term|
+      link_to 'Fix', edit_admin_mapped_term_path(mapped_term)
     end
   end
 
   controller do
     def scoped_collection
-      Topic.includes(:sectors, :industries).where('sectors.id' => nil, 'industries.id' => nil)
+      MappedTerm.includes(:terms).where('terms.id' => nil)
     end
   end
 end

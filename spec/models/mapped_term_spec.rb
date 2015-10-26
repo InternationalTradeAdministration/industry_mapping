@@ -1,8 +1,7 @@
 require 'spec_helper'
 
-describe Topic do
-  it { is_expected.to have_many(:sectors) }
-  it { is_expected.to have_many(:industries) }
+describe MappedTerm do
+  it { is_expected.to have_and_belong_to_many(:terms) }
   it { is_expected.to belong_to(:source) }
 
   it { is_expected.to validate_presence_of(:source) }
@@ -11,12 +10,12 @@ describe Topic do
   describe 'uniqueness validation' do
     let(:source1) { Source.create(name: 'Source 1') }
     let(:source2) { Source.create(name: 'Source 2') }
-    let!(:topic) { Topic.create(name: 'Foo', source: source1) }
+    let!(:mapped_term) { MappedTerm.create(name: 'Foo', source: source1) }
 
     it 'enforces uniqueness scoped to source' do
-      expect(Topic.create(name: 'Bar', source: source1)).to be_valid
-      expect(Topic.create(name: 'Foo', source: source2)).to be_valid
-      expect(Topic.create(name: 'Foo', source: source1)).to_not be_valid
+      expect(MappedTerm.create(name: 'Bar', source: source1)).to be_valid
+      expect(MappedTerm.create(name: 'Foo', source: source2)).to be_valid
+      expect(MappedTerm.create(name: 'Foo', source: source1)).to_not be_valid
     end
   end
 end

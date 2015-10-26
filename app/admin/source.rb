@@ -4,11 +4,11 @@ ActiveAdmin.register Source do
   index do
     column :name
     column :updated_at
-    column :topics do |source|
-      links = source.topics.order(:name).first(10).collect { |topic|
-        link_to topic.name, admin_topic_path(topic)
-      }.join(', ')
-      links.concat(', ...') if source.topics.count > 10
+    column :mapped_terms do |source|
+      links = source.mapped_terms.order(:name).first(10).collect do |mapped_term|
+        link_to mapped_term.name, admin_mapped_term_path(mapped_term)
+      end.join(', ')
+      links.concat(', ...') if source.mapped_terms.count > 10
       links.html_safe
     end
     actions
@@ -16,7 +16,7 @@ ActiveAdmin.register Source do
 
   controller do
     def scoped_collection
-      Source.includes(:topics)
+      Source.includes(:mapped_terms)
     end
   end
 
@@ -27,10 +27,10 @@ ActiveAdmin.register Source do
       row :updated_at
       row :created_at
     end
-    panel "Topics" do
-      table_for source.topics do
-        column "topic name" do |topic|
-          link_to topic.name, admin_topic_path(topic)
+    panel 'Mapped Terms' do
+      table_for source.mapped_terms do
+        column 'mapped term name' do |mapped_term|
+          link_to mapped_term.name, admin_mapped_term_path(mapped_term)
         end
       end
     end
